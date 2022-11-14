@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Network</title>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style type="text/css">
+    #mynetwork {
+      width: 1000px;
+      height: 1000px;
+      background-color: grey;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mynetwork"></div>
+  <script type="text/javascript">
+    fetch('https://api.politicsandwar.com/graphql?api_key=a3746458ad9b20', {
+      method: 'POST',
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        query: `{
+  wars(alliance_id:[9986, 1584, 7452, 877, 5049, 8236, 8173, 7000,4648, 5039, 4729, 4221, 622, 8804, 3427, 1246, 1742, 9950, 10190, 1896, 5875, 9600, 6126, 9927, 7674, 9948, 8819, 9961, 10683],active:true,first:1000){
+  data{
+    
+      attacker{
+        nation_name
+        id
+        num_cities
+
+        alliance{id
+          flag}
+
+      }
+    defender{
+      nation_name
+      id
+      num_cities
+
+      alliance{id
+        flag
+      }
+
+    }
+  }    
+  }
+}
+  `
+      })
+    })
+      .then(res => res.json())
+      .then(res => {
+        let warring_aas = [9986, 1584, 7452, 877, 5049, 8236, 8173, 7000, 4648, 5039, 4729, 4221, 622, 8804, 3427, 1246, 1742, 9950, 10190, 1896, 5875, 9600, 6126, 9927, 7674, 9948, 8819, 9961, 10683]
+        let nations = []
+        let nation_ids = []
+        let wars = []
+        for (let war of res.data.wars.data) {
+          if (war.attacker.alliance != null && war.defender.alliance != null) {
+            if (warring_aas.includes(parseInt(war.attacker.alliance.id)) && warring_aas.includes(parseInt(war.defender.alliance.id))) {
+              try {
+                if (!nation_ids.includes(war.attacker.id) && war.attacker.alliance.flag != "http://i.imgur.com/GfV4IMw.png") {
+                  nations.push({ id: war.attacker.id, scaling: { min: 1, max: 60 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "image", image: war.attacker.alliance.flag })
+                  nation_ids.push(war.attacker.id)
+                }
+
+                if (!nation_ids.includes(war.defender.id) && war.defender.alliance.flag != "http://i.imgur.com/GfV4IMw.png") {
+                  nations.push({ id: war.defender.id, scaling: { min: 1, max: 60 }, value: war.defender.num_cities, group: war.defender.alliance.id, label: war.defender.nation_name, shape: "image", image: war.defender.alliance.flag })
+                  nation_ids.push(war.defender.id)
+                }
+              } catch {
+                console.log("No AA")
+              }
+              wars.push({ arrows: 'middle', from: war.attacker.id, to: war.defender.id, id: war.id })
+            }
+          }
+        }
+        console.log(nations)
+        console.log(wars)
+
+        var nodes = new vis.DataSet(nations)
+        var edges = new vis.DataSet(wars);
+
+
+
+
+
+
+
+        var container = document.getElementById("mynetwork");
+        var data = {
+          nodes: nodes,
+          edges: edges,
+
+        };
+
+
+        var options = {};
+        var network = new vis.Network(container, data, options)
+
+
+      })
+      ;
+  </script>
+</body>
+
+</html>
