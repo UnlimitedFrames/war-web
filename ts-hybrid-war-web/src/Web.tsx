@@ -57,7 +57,7 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
             for (let war of res.data.wars.data) {
                 if (war.attacker.alliance != null && war.defender.alliance != null) {
                     if (warring_aas.includes(parseInt(war.attacker.alliance.id)) && warring_aas.includes(parseInt(war.defender.alliance.id))) {
-                        if (allowed_ids.includes(war.attacker.id) || allowed_ids.includes(war.defender.id)) {
+                        if (allowed_ids.length == 0 || allowed_ids.includes(war.attacker.id) || allowed_ids.includes(war.defender.id)) {
                             if (!nation_ids.includes(war.attacker.id)) {
                                 nations.push({ id: war.attacker.id, weight: war.attacker.num_cities, title: war.attacker.id, level: war.attacker.id == selected_nat ? 1 : war.defender.id == selected_nat ? 2 : 3, scaling: { min: 1, max: 30 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "circularImage", image: war.attacker.alliance.flag })
                                 nation_ids.push(war.attacker.id)
