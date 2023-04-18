@@ -2,7 +2,10 @@
 <html lang="en">
 
 <head>
-  <title>Network</title>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>War Web</title>
   <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
   <style type="text/css">
     #mynetwork {
@@ -16,7 +19,9 @@
 <body>
   <div id="mynetwork"></div>
   <script type="text/javascript">
-    fetch('https://api.politicsandwar.com/graphql?api_key=a3746458ad9b20', {
+    let params = new URLSearchParams(window.location.search)
+    console.log(params)
+    fetch('https://api.politicsandwar.com/graphql?api_key=' + params.get("apikey"), {
       method: 'POST',
 
       headers: {
@@ -25,7 +30,7 @@
 
       body: JSON.stringify({
         query: `{
-  wars(alliance_id:[9986, 1584, 7452, 877, 5049, 8236, 8173, 7000,4648, 5039, 4729, 4221, 622, 8804, 3427, 1246, 1742, 9950, 10190, 1896, 5875, 9600, 6126, 9927, 7674, 9948, 8819, 9961, 10683],active:true,first:1000){
+  wars(alliance_id:[4124, 9573, 8804, 5039, 7815, 4648, 11320, 913, 3427, 1742, 7531],active:true,first:1000){
   data{
     
       attacker{
@@ -55,7 +60,7 @@
     })
       .then(res => res.json())
       .then(res => {
-        let warring_aas = [9986, 1584, 7452, 877, 5049, 8236, 8173, 7000, 4648, 5039, 4729, 4221, 622, 8804, 3427, 1246, 1742, 9950, 10190, 1896, 5875, 9600, 6126, 9927, 7674, 9948, 8819, 9961, 10683]
+        let warring_aas = [4124, 9573, 8804, 5039, 7815, 4648, 11320, 913, 3427, 1742, 7531]
         let nations = []
         let nation_ids = []
         let wars = []
@@ -106,6 +111,8 @@
       })
       ;
   </script>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 
 </html>
