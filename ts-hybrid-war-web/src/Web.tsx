@@ -45,10 +45,19 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
             let nations = []
             let nation_ids: string[] = []
             let wars = []
+            let allowed_ids: string[] = []
+            if (selected_nat) {
+                allowed_ids.push(selected_nat)
+                res.data.wars.data.forEach((war: any) => {
+                    if (war.attacker.id == selected_nat) allowed_ids.push(war.defender.id)
+                    if (war.defender.id == selected_nat) allowed_ids.push(war.attacker.id)
+                })
+
+            }
             for (let war of res.data.wars.data) {
                 if (war.attacker.alliance != null && war.defender.alliance != null) {
                     if (warring_aas.includes(parseInt(war.attacker.alliance.id)) && warring_aas.includes(parseInt(war.defender.alliance.id))) {
-                        if (!selected_nat || (selected_nat && [war.attacker.id, war.defender.id].includes(selected_nat))) {
+                        if (allowed_ids.includes(war.attacker.id) || allowed_ids.includes(war.defender.id)) {
                             if (!nation_ids.includes(war.attacker.id)) {
                                 nations.push({ id: war.attacker.id, weight: war.attacker.num_cities, title: war.attacker.id, level: war.attacker.id == selected_nat ? 1 : war.defender.id == selected_nat ? 2 : 3, scaling: { min: 1, max: 30 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "circularImage", image: war.attacker.alliance.flag })
                                 nation_ids.push(war.attacker.id)
@@ -60,6 +69,7 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
                             }
 
                             wars.push({ title: "war", arrows: 'middle', smooth: { type: "continuous" }, from: war.attacker.id, to: war.defender.id, id: war.id, width: war.turns_left / 12 })
+
                         }
                     }
                 }

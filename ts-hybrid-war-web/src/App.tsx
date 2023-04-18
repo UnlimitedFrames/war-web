@@ -9,6 +9,7 @@ function App() {
 
   useEffect(() => {
     apikey
+    selectedNat
   }, [])
   return (
     <>
