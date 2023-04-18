@@ -3,109 +3,11 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>War Web</title>
-  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-  <style type="text/css">
-    #mynetwork {
-      width: 1000px;
-      height: 1000px;
-      background-color: darkslategray;
-    }
-  </style>
 </head>
 
 <body>
-  <div id="mynetwork"></div>
-  <script type="text/javascript">
-    let params = new URLSearchParams(window.location.search)
-    let selected_nat = "44189"
-    fetch('https://api.politicsandwar.com/graphql?api_key=' + params.get("apikey"), {
-      method: 'POST',
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-        query: `{
-  wars(alliance_id:[4124, 9573, 8804, 5039, 7815, 4648, 11320, 913, 3427, 1742, 7531],active:true,first:1000){
-  data{
-    
-      attacker{
-        nation_name
-        id
-        num_cities
-
-        alliance{id
-          flag}
-
-      }
-    defender{
-      nation_name
-      id
-      num_cities
-
-      alliance{id
-        flag
-      }
-    }
-    turns_left
-  }    
-  }
-}
-  `
-      })
-    })
-      .then(res => res.json())
-      .then(res => {
-        let warring_aas = [4124, 9573, 8804, 5039, 7815, 4648, 11320, 913, 3427, 1742, 7531]
-        let nations = []
-        let nation_ids = []
-        let wars = []
-        for (let war of res.data.wars.data) {
-          if (war.attacker.alliance != null && war.defender.alliance != null) {
-            if (warring_aas.includes(parseInt(war.attacker.alliance.id)) && warring_aas.includes(parseInt(war.defender.alliance.id))) {
-              try {
-                if (!nation_ids.includes(war.attacker.id)) {
-                  nations.push({ id: war.attacker.id, weight: war.attacker.num_cities, title: war.attacker.id, level: war.attacker.id == selected_nat ? 1 : war.defender.id == selected_nat ? 2 : 3, scaling: { min: 1, max: 30 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "circularImage", image: war.attacker.alliance.flag })
-                  nation_ids.push(war.attacker.id)
-                }
-
-                if (!nation_ids.includes(war.defender.id)) {
-                  nations.push({ id: war.defender.id, weight: war.attacker.num_cities * 10, title: war.defender.id, level: war.defender.id == selected_nat ? 1 : war.attacker.id == selected_nat ? 2 : 3, scaling: { min: 1, max: 30 }, value: war.defender.num_cities, group: war.defender.alliance.id, label: war.defender.nation_name, shape: "circularImage", image: war.defender.alliance.flag })
-                  nation_ids.push(war.defender.id)
-                }
-              } catch {
-                console.log("No AA")
-              }
-              wars.push({ title: "war", arrows: 'middle', smooth: { type: "continuous" }, from: war.attacker.id, to: war.defender.id, id: war.id, width: war.turns_left / 12 })
-            }
-          }
-        }
-        console.log(nations)
-        console.log(wars)
-
-        var nodes = new vis.DataSet(nations)
-        var edges = new vis.DataSet(wars);
-
-
-        var container = document.getElementById("mynetwork");
-        var data = {
-          nodes: nodes,
-          edges: edges,
-
-        };
-
-
-        var options = {};
-        var network = new vis.Network(container, data, options)
-
-
-      })
-      ;
-  </script>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>

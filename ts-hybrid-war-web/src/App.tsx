@@ -1,19 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import { Button, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
+import Web from './Web';
 
 function App() {
-  const [apikey, setApikey] = useState("");
-
-  const handleButton = () => {
-    window.location.replace("?apikey=" + apikey)
-  }
+  const [apikey, setApikey] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    apikey
+  }, [])
   return (
     <>
 
+      <Web apikey={apikey} />
       <TextField focused color='success' className='apikeyinput' id="outlined-basic" label="Input API key" variant="filled" onChange={(event: any) => setApikey(event.target.value)} />
-
-      <Button onClick={handleButton} variant="contained">Update</Button>
     </>
   )
 }
