@@ -11,7 +11,7 @@
     #mynetwork {
       width: 1000px;
       height: 1000px;
-      background-color: grey;
+      background-color: darkslategray;
     }
   </style>
 </head>
@@ -68,13 +68,13 @@
           if (war.attacker.alliance != null && war.defender.alliance != null) {
             if (warring_aas.includes(parseInt(war.attacker.alliance.id)) && warring_aas.includes(parseInt(war.defender.alliance.id))) {
               try {
-                if (!nation_ids.includes(war.attacker.id) && war.attacker.alliance.flag != "http://i.imgur.com/GfV4IMw.png") {
-                  nations.push({ id: war.attacker.id, scaling: { min: 1, max: 60 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "image", image: war.attacker.alliance.flag })
+                if (!nation_ids.includes(war.attacker.id)) {
+                  nations.push({ id: war.attacker.id, scaling: { min: 0.5, max: 30 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "image", image: war.attacker.alliance.flag })
                   nation_ids.push(war.attacker.id)
                 }
 
-                if (!nation_ids.includes(war.defender.id) && war.defender.alliance.flag != "http://i.imgur.com/GfV4IMw.png") {
-                  nations.push({ id: war.defender.id, scaling: { min: 1, max: 60 }, value: war.defender.num_cities, group: war.defender.alliance.id, label: war.defender.nation_name, shape: "image", image: war.defender.alliance.flag })
+                if (!nation_ids.includes(war.defender.id)) {
+                  nations.push({ id: war.defender.id, scaling: { min: 0.5, max: 30 }, value: war.defender.num_cities, group: war.defender.alliance.id, label: war.defender.nation_name, shape: "image", image: war.defender.alliance.flag })
                   nation_ids.push(war.defender.id)
                 }
               } catch {
@@ -89,11 +89,6 @@
 
         var nodes = new vis.DataSet(nations)
         var edges = new vis.DataSet(wars);
-
-
-
-
-
 
 
         var container = document.getElementById("mynetwork");
