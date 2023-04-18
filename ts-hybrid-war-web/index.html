@@ -80,7 +80,7 @@
               } catch {
                 console.log("No AA")
               }
-              wars.push({ arrows: 'middle', from: war.attacker.id, to: war.defender.id, id: war.id })
+              wars.push({ arrows: 'middle', smoot: { type: "continuous", roundness: 0 }, from: war.attacker.id, to: war.defender.id, id: war.id })
             }
           }
         }
