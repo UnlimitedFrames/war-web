@@ -59,12 +59,12 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
                     if (warring_aas.includes(parseInt(war.attacker.alliance.id)) && warring_aas.includes(parseInt(war.defender.alliance.id))) {
                         if (allowed_ids.length == 0 || allowed_ids.includes(war.attacker.id) || allowed_ids.includes(war.defender.id)) {
                             if (!nation_ids.includes(war.attacker.id)) {
-                                nations.push({ id: war.attacker.id, weight: war.attacker.num_cities, title: war.attacker.id, level: war.attacker.id == selected_nat ? 1 : war.defender.id == selected_nat ? 2 : 3, scaling: { min: 1, max: 30 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "circularImage", image: war.attacker.alliance.flag })
+                                nations.push({ id: war.attacker.id, weight: war.attacker.num_cities, title: war.attacker.id, level: war.attacker.id == selected_nat ? 1 : war.defender.id == selected_nat ? 2 : 3, scaling: { min: 5, max: 35 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "circularImage", image: war.attacker.alliance.flag })
                                 nation_ids.push(war.attacker.id)
                             }
 
                             if (!nation_ids.includes(war.defender.id)) {
-                                nations.push({ id: war.defender.id, weight: war.attacker.num_cities * 10, title: war.defender.id, level: war.defender.id == selected_nat ? 1 : war.attacker.id == selected_nat ? 2 : 3, scaling: { min: 1, max: 30 }, value: war.defender.num_cities, group: war.defender.alliance.id, label: war.defender.nation_name, shape: "circularImage", image: war.defender.alliance.flag })
+                                nations.push({ id: war.defender.id, weight: war.attacker.num_cities * 10, title: war.defender.id, level: war.defender.id == selected_nat ? 1 : war.attacker.id == selected_nat ? 2 : 3, scaling: { min: 5, max: 35 }, value: war.defender.num_cities, group: war.defender.alliance.id, label: war.defender.nation_name, shape: "circularImage", image: war.defender.alliance.flag })
                                 nation_ids.push(war.defender.id)
                             }
 
