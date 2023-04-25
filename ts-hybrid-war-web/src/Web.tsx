@@ -11,7 +11,7 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
 
         body: JSON.stringify({
             query: `{
-            wars(alliance_id:[5875, 622, 1742, 7674, 9927, 4648, 9948, 8804, 5039, 8819, 4729, 5049, 7531],active:true,first:1000){
+            wars(alliance_id:[5875, 622, 1742, 7674, 9927, 4648, 9948, 8804, 5039, 8819, 4729, 5049, 7531,11232],active:true,first:1000){
             data{
     
       attacker{
