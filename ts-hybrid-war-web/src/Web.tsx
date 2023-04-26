@@ -41,7 +41,7 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
     })
         .then(res => res.json())
         .then(res => {
-            let warring_aas = [5875, 622, 1742, 7674, 9927, 4648, 9948, 8804, 5039, 8819, 4729, 5049, 7531]
+            let warring_aas = [5875, 622, 1742, 7674, 9927, 4648, 9948, 8804, 5039, 8819, 4729, 5049, 7531, 11232]
             let nations = []
             let nation_ids: string[] = []
             let wars = []
