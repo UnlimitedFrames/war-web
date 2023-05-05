@@ -47,3 +47,10 @@
 .read-the-docs {
   color: #888;
 }
+
+.box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}

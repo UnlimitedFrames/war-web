@@ -37,8 +37,8 @@ function App() {
   return (
     <>
       <Alert severity='info'>Simply put your API key & a nation or alliance ID & hit update. Any questions please go to the discord!</Alert>
-      <Box>
-        <Grid spacing={2}>
+      <Box className="box">
+        <Grid spacing={2} className="box">
           <Grid item >
             <Button href="https://discord.gg/bnPQvGX" target="_blank" variant="contained" color="success" size="large">Join the Discord</Button>
           </Grid>
