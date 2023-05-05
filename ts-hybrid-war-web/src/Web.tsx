@@ -36,7 +36,6 @@ interface webProps { apikey: string, id: string, natOrAA: boolean, setisLoading:
 export default function web(props: webProps) {
     props.setisLoading(true)
     props.setError(undefined)
-    const container = document.getElementById("network");
 
 
     let id = props.id
@@ -106,8 +105,7 @@ export default function web(props: webProps) {
                 };
 
 
-                var options = {};
-                new Network(container as HTMLElement, data as any, options)
+                new Network(document.getElementById("network") as HTMLElement, data, {})
                 props.setisLoading(false)
             }
         })

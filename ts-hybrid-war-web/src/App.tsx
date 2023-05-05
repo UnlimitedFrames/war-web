@@ -52,9 +52,10 @@ function App() {
             {error && <Alert severity='error'>{error}</Alert>}
           </Grid>
           <Grid item >
-            {isLoading && <CircularProgress color="secondary" />}
+
           </Grid>
           <Grid item >
+            {isLoading && <CircularProgress color="secondary" />}
             <div id='network' style={{ position: "sticky", left: "0px", top: "5px", backgroundColor: "#6da177" }}></div >
           </Grid>
         </Grid>
