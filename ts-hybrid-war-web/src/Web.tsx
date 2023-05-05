@@ -1,7 +1,15 @@
 import { DataSet } from "vis-data"
 import { Network } from "vis-network"
-export default function Web(props: { apikey: string | undefined, selected_nat: string | undefined }) {
-    let selected_nat = props.selected_nat
+
+interface webProps { apikey: string, id: string, natOrAA: boolean, setisLoading: any, setError: any }
+export default function web(props: webProps) {
+    props.setisLoading(true)
+    props.setError(undefined)
+    const container = document.getElementById("network");
+
+
+    let id = props.id
+
     props.apikey && fetch('https://api.politicsandwar.com/graphql?api_key=' + props.apikey, {
         method: 'POST',
 
@@ -11,66 +19,63 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
 
         body: JSON.stringify({
             query: `{
-            wars(alliance_id:[5875, 622, 1742, 7674, 9927, 4648, 9948, 8804, 5039, 8819, 4729, 5049, 7531,11232,4937,10177],active:true,first:1000){
-            data{
-    
-      attacker{
-        nation_name
-        id
-        num_cities
+        wars(`+ (props.natOrAA ? ("nation_id") : ("alliance_id")) + `:[` + id + `],active:true,first:1000){
+        data{
 
-        alliance{id
-          flag}
+  attacker{
+    nation_name
+    id
+    num_cities
 
-      }
-    defender{
-      nation_name
-      id
-      num_cities
+    alliance{id
+      flag}
 
-      alliance{id
-        flag
-      }
-    }
-    turns_left
-  }    
+  }
+defender{
+  nation_name
+  id
+  num_cities
+
+  alliance{id
+    flag
   }
 }
-  `
+turns_left
+}    
+}
+}
+`
         })
     })
         .then(res => res.json())
         .then(res => {
-            let warring_aas = [5875, 622, 1742, 7674, 9927, 4648, 9948, 8804, 5039, 8819, 4729, 5049, 7531, 11232, 4937, 10177]
+
+            res.errors &&
+                props.setError(res.errors[0].message)
+
+
             let nations = []
             let nation_ids: string[] = []
             let wars = []
             let allowed_ids: string[] = []
-            if (selected_nat) {
-                allowed_ids.push(selected_nat)
-                res.data.wars.data.forEach((war: any) => {
-                    if (war.attacker.id == selected_nat) allowed_ids.push(war.defender.id)
-                    if (war.defender.id == selected_nat) allowed_ids.push(war.attacker.id)
-                })
 
-            }
+
             for (let war of res.data.wars.data) {
                 if (war.attacker.alliance != null && war.defender.alliance != null) {
-                    if (warring_aas.includes(parseInt(war.attacker.alliance.id)) && warring_aas.includes(parseInt(war.defender.alliance.id))) {
-                        if (allowed_ids.length == 0 || allowed_ids.includes(war.attacker.id) || allowed_ids.includes(war.defender.id)) {
-                            if (!nation_ids.includes(war.attacker.id)) {
-                                nations.push({ id: war.attacker.id, weight: war.attacker.num_cities, title: war.attacker.id, level: war.attacker.id == selected_nat ? 1 : war.defender.id == selected_nat ? 2 : 3, scaling: { min: 5, max: 35 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "circularImage", image: war.attacker.alliance.flag })
-                                nation_ids.push(war.attacker.id)
-                            }
-
-                            if (!nation_ids.includes(war.defender.id)) {
-                                nations.push({ id: war.defender.id, weight: war.attacker.num_cities * 10, title: war.defender.id, level: war.defender.id == selected_nat ? 1 : war.attacker.id == selected_nat ? 2 : 3, scaling: { min: 5, max: 35 }, value: war.defender.num_cities, group: war.defender.alliance.id, label: war.defender.nation_name, shape: "circularImage", image: war.defender.alliance.flag })
-                                nation_ids.push(war.defender.id)
-                            }
-
-                            wars.push({ title: "war", arrows: 'middle', smooth: { type: "continuous" }, from: war.attacker.id, to: war.defender.id, id: war.id, width: war.turns_left / 12 })
-
+                    if (allowed_ids.length == 0 || allowed_ids.includes(war.attacker.id) || allowed_ids.includes(war.defender.id)) {
+                        if (!nation_ids.includes(war.attacker.id)) {
+                            nations.push({ id: war.attacker.id, weight: war.attacker.num_cities, title: war.attacker.id, scaling: { min: 5, max: 35 }, value: war.attacker.num_cities, group: war.attacker.alliance.id, label: war.attacker.nation_name, shape: "circularImage", image: war.attacker.alliance.flag })
+                            nation_ids.push(war.attacker.id)
                         }
+
+                        if (!nation_ids.includes(war.defender.id)) {
+                            nations.push({ id: war.defender.id, weight: war.attacker.num_cities * 10, title: war.defender.id, scaling: { min: 5, max: 35 }, value: war.defender.num_cities, group: war.defender.alliance.id, label: war.defender.nation_name, shape: "circularImage", image: war.defender.alliance.flag })
+                            nation_ids.push(war.defender.id)
+                        }
+
+                        wars.push({ title: "war", arrows: 'middle', smooth: { type: "continuous" }, from: war.attacker.id, to: war.defender.id, id: war.id, width: war.turns_left / 12 })
+
+
                     }
                 }
             }
@@ -79,7 +84,6 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
             var edges = new DataSet(wars);
 
 
-            var container = document.getElementById("network");
             var data = {
                 nodes: nodes,
                 edges: edges,
@@ -89,7 +93,6 @@ export default function Web(props: { apikey: string | undefined, selected_nat: s
 
             var options = {};
             new Network(container as HTMLElement, data as any, options)
+            props.setisLoading(false)
         })
-    return (<div id='network' style={{ width: "1200px", height: "700px", position: "sticky", left: "0px", top: "5px", backgroundColor: "#6da177" }}></div >
-    )
 }
