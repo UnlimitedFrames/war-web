@@ -36,7 +36,7 @@ function App() {
   }, [])
   return (
     <>
-      <Alert severity='info'>Simply put your API key & hit enter in and the web of the current tracked conflict will be built, takes less than 10s, Any questions please on the discord</Alert>
+      <Alert severity='info'>Simply put your API key & a nation or alliance ID & hit update. Any questions please go to the discord!</Alert>
       <Box>
         <Grid spacing={2}>
           <Grid item >
