@@ -48,8 +48,19 @@ function App() {
           <Grid item >
             <Button onClick={() => web({ apikey, id, natOrAA, setisLoading, setError, level })} variant='contained' > Update </Button>
           </Grid>
-        </Grid >
+          <Grid item >
+            {error && <Alert severity='error'>{error}</Alert>}
+          </Grid>
+          <Grid item >
+            {isLoading && <CircularProgress color="secondary" />}
+          </Grid>
+          <Grid item >
+            <div id='network' style={{ position: "sticky", left: "0px", top: "5px", backgroundColor: "#6da177" }}></div >
+          </Grid>
+        </Grid>
+
       </Box>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -87,10 +98,6 @@ function App() {
           </Grid>
         </Box>
       </Modal>
-      {error && <Alert severity='error'>{error}</Alert>}
-      {isLoading && <CircularProgress color="secondary" />}
-      <div id='network' style={{ width: "1200px", height: "700px", position: "sticky", left: "0px", top: "5px", backgroundColor: "#6da177" }}></div >
-
     </>
   )
 }
