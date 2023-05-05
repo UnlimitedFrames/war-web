@@ -54,58 +54,62 @@ export default function web(props: webProps) {
     })
         .then(res => res.json())
         .then(res => {
-            res.errors &&
-                props.setError(res.errors[0].message)
-            let totalWars: war[] = []
-            res.data.wars.data.forEach(
-                (war: warWithWars) => {
-                    war.attacker?.wars && war.attacker.wars.forEach((war2: warWithWars) => {
-                        war2.attacker?.wars && war2.attacker.wars.forEach((war3: warWithWars) => {
-                            totalWars.push(war3)
-                        })
-                        war2.defender?.wars && war2.defender.wars.forEach((war3: warWithWars) => {
-                            totalWars.push(war3)
-                        })
-                        totalWars.push(war2)
+            if (res.errors) {
+                props.setError(res.errors[0].message);
+                props.setisLoading(false)
+            } else {
 
-                    })
-                    war.defender?.wars && war.defender.wars.forEach((war2: warWithWars) => {
-                        war2.attacker.wars && war2.attacker.wars.forEach((war3: warWithWars) => {
-                            totalWars.push(war3)
-                        })
-                        war2.defender?.wars && war2.defender.wars.forEach((war3: warWithWars) => {
-                            totalWars.push(war3)
-                        })
+                let totalWars: war[] = []
+                res.data.wars.data.forEach(
+                    (war: warWithWars) => {
+                        war.attacker?.wars && war.attacker.wars.forEach((war2: warWithWars) => {
+                            war2.attacker?.wars && war2.attacker.wars.forEach((war3: warWithWars) => {
+                                totalWars.push(war3)
+                            })
+                            war2.defender?.wars && war2.defender.wars.forEach((war3: warWithWars) => {
+                                totalWars.push(war3)
+                            })
+                            totalWars.push(war2)
 
-                        totalWars.push(war2)
+                        })
+                        war.defender?.wars && war.defender.wars.forEach((war2: warWithWars) => {
+                            war2.attacker.wars && war2.attacker.wars.forEach((war3: warWithWars) => {
+                                totalWars.push(war3)
+                            })
+                            war2.defender?.wars && war2.defender.wars.forEach((war3: warWithWars) => {
+                                totalWars.push(war3)
+                            })
 
+                            totalWars.push(war2)
+
+                        }
+                        )
+                        totalWars.push(war)
                     }
-                    )
-                    totalWars.push(war)
-                }
-            )
+                )
 
-            let nations: any[] = []
-            let wars: any[] = []
+                let nations: any[] = []
+                let wars: any[] = []
 
 
 
-            loadWars(nations, wars, totalWars)
+                loadWars(nations, wars, totalWars)
 
-            var nodes = new DataSet(nations)
-            var edges = new DataSet(wars);
-
-
-            var data = {
-                nodes: nodes,
-                edges: edges,
-
-            };
+                var nodes = new DataSet(nations)
+                var edges = new DataSet(wars);
 
 
-            var options = {};
-            new Network(container as HTMLElement, data as any, options)
-            props.setisLoading(false)
+                var data = {
+                    nodes: nodes,
+                    edges: edges,
+
+                };
+
+
+                var options = {};
+                new Network(container as HTMLElement, data as any, options)
+                props.setisLoading(false)
+            }
         })
 }
 
