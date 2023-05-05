@@ -56,7 +56,7 @@ function App() {
           </Grid>
           <Grid item >
             {isLoading && <CircularProgress color="secondary" />}
-            <div id='network' style={{ width: "100%", height: "700px", position: "sticky", left: "0px", top: "5px", backgroundColor: "#6da177" }}></div >
+            <div id='network' style={{ width: "100%", height: "700px", position: "sticky", left: "0px", top: "5px", backgroundColor: "#6da177" }} />
           </Grid>
         </Grid>
 
