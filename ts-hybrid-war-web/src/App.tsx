@@ -4,7 +4,7 @@ import { Alert, Box, Button, CircularProgress, Grid, Modal, Paper, Slider, Switc
 import web from './Web';
 
 function App() {
-  const [apikey, setApikey] = useState<string>("");
+  const [apikey, setApikey] = useState(localStorage.getItem("apikey"));
   const [id, setId] = useState<string>("");
   const [error, setError] = useState<string | undefined>(undefined);
   const [natOrAA, setNatOrAA] = useState(false);
@@ -46,7 +46,7 @@ function App() {
             <Button onClick={handleOpen} color='warning' variant='contained'>Open Settings</Button>
           </Grid>
           <Grid item >
-            <Button onClick={() => web({ apikey, id, natOrAA, setisLoading, setError, level })} variant='contained' > Update </Button>
+            <Button onClick={() => apikey && web({ apikey, id, natOrAA, setisLoading, setError, level })} variant='contained' > Update </Button>
           </Grid>
           <Grid item >
             {error && <Alert severity='error'>{error}</Alert>}
@@ -71,7 +71,7 @@ function App() {
         <Box sx={style}>
           <Grid container spacing={2} >
             <Grid item>
-              <TextField value={apikey} focused color='success' className='apikeyinput' id="outlined-basic" label="Input API key" variant="filled" onChange={(event: any) => setApikey(event.target.value)} />
+              <TextField value={apikey} type={'password'} focused color='success' className='apikeyinput' id="outlined-basic" label="Input API key" variant="filled" onChange={(event: any) => { setApikey(event.target.value); localStorage.setItem("apikey", event.target.value) }} />
             </Grid>
             <Grid item>
               <Paper>
@@ -92,7 +92,7 @@ function App() {
             </Grid>
             <Grid item>
               <Button onClick={() => {
-                web({ apikey, id, natOrAA, setisLoading, setError, level })
+                apikey && web({ apikey, id, natOrAA, setisLoading, setError, level })
                 handleClose()
               }} variant='contained' > Update </Button>
             </Grid>
